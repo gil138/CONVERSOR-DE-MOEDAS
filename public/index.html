@@ -110,7 +110,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          resultDiv.innerHTML = `${amount} ${from} = ${data.convertedAmount} ${to} (Taxa: ${data.rate})`;
+          resultDiv.innerHTML = `${amount} ${from} = ${data.convertedamount} ${to}`;
           resultDiv.classList.remove('error');
         } else {
           resultDiv.innerHTML = `❌ Erro: ${data.error}`;
