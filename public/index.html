@@ -1,0 +1,126 @@
+<html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor de Moedas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f0f2f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; color: #333; }
+    label { font-weight: bold; display: block; margin-top: 15px; }
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e9ecef;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💱 Conversor de Moedas</h1>
+    
+    <label>Moeda de origem:</label>
+    <select id="from">
+      <option value="USD">Dólar (USD)</option>
+      <option value="EUR">Euro (EUR)</option>
+      <option value="BRL" selected>Real (BRL)</option>
+      <option value="GBP">Libra (GBP)</option>
+      <option value="JPY">Iene (JPY)</option>
+    </select>
+
+    <label>Moeda de destino:</label>
+    <select id="to">
+      <option value="BRL" selected>Real (BRL)</option>
+      <option value="USD">Dólar (USD)</option>
+      <option value="EUR">Euro (EUR)</option>
+      <option value="GBP">Libra (GBP)</option>
+      <option value="JPY">Iene (JPY)</option>
+    </select>
+
+    <label>Valor a converter:</label>
+    <input type="number" id="amount" value="1" step="any">
+
+    <button id="convertBtn">Converter</button>
+
+    <div id="result" class="result">Resultado aparecerá aqui</div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('convertBtn');
+    const fromSelect = document.getElementById('from');
+    const toSelect = document.getElementById('to');
+    const amountInput = document.getElementById('amount');
+    const resultDiv = document.getElementById('result');
+
+    btn.addEventListener('click', async () => {
+      const from = fromSelect.value;
+      const to = toSelect.value;
+      const amount = amountInput.value;
+
+      if (!amount || amount <= 0) {
+        resultDiv.innerHTML = '❌ Digite um valor válido';
+        resultDiv.classList.add('error');
+        return;
+      }
+
+      try {
+        const url = `http://localhost:3000/convert?from=${from}&to=${to}&amount=${amount}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (response.ok) {
+          resultDiv.innerHTML = `${amount} ${from} = ${data.convertedAmount} ${to} (Taxa: ${data.rate})`;
+          resultDiv.classList.remove('error');
+        } else {
+          resultDiv.innerHTML = `❌ Erro: ${data.error}`;
+          resultDiv.classList.add('error');
+        }
+      } catch (error) {
+        resultDiv.innerHTML = '❌ Erro de conexão. Certifique-se que o servidor está rodando.';
+        resultDiv.classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>
