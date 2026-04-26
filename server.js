@@ -21,7 +21,7 @@ app.get('/convert', async (req, res) => {
         res.status(500).json({error: 'erro ao consultar a API de cambio'});
     }
 });
- const PORT = 3000;
+ const PORT = process.env.PORT || 3000;
  app.listen(PORT, () => {
     console.log (`Servidor rodando na porta ${PORT}`);   
  });
