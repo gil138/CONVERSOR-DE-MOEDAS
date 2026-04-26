@@ -4,6 +4,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.get('/ping', (req, res) => {
+    res.send('pong');
+});
 app.get('/convert', async (req, res) => {
     const {amount, from, to} = req.query;
     if (!from || !to || !amount) {
